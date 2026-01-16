@@ -1,8 +1,34 @@
 # Boston House Price Prediction using Machine Learning
 
+![Project Screenshot](Output/image.png)
+
 ## Project Overview
 
 This repository contains a predictive analytics solution designed to estimate property values in the Boston metropolitan area. Leveraging the renowned Boston Housing dataset, the implementation constructs an intelligent pricing model by examining key property characteristics including neighborhood safety metrics, dwelling size, transportation accessibility, and various socio-economic indicators. The solution employs CatBoostRegressor, a gradient boosting framework, to deliver precise price forecasts. Throughout the development process, comprehensive data exploration, feature engineering, and model optimization techniques were applied. The final model serves as a practical decision-support tool for real estate stakeholders seeking data-driven price estimations.
+
+## Features
+
+✨ **Modern Web Interface**
+- Beautiful gradient design with responsive layout
+- Two-column form layout for better user experience
+- Intuitive input fields with descriptive placeholders
+- Real-time form validation
+
+🚀 **Quick Start Options**
+- Pre-configured sample data buttons for testing:
+  - 💰 Load Expensive House
+  - 🏠 Load Average House  
+  - 💵 Load Budget House
+
+💡 **User-Friendly Features**
+- Formatted price display (e.g., "$250K ($250,000)")
+- Clear error messages and validation
+- Mobile-responsive design
+- Fast prediction results
+
+🔌 **API Support**
+- RESTful API endpoint for programmatic access
+- JSON-based request/response format
 
 ## Technology Stack
 
@@ -35,9 +61,33 @@ Install all required Python packages using pip:
 pip install -r requirements.txt
 ```
 
-### Step 3: Generate Model Files
+**Important Note**: This project requires NumPy < 2.0 for compatibility with the pickle files. If you encounter version conflicts, use:
 
-Execute the Jupyter notebook (`Boston House Price Prediction.ipynb`) to train the model and generate the necessary `.pkl` files required for deployment. Once the notebook runs successfully, you'll have both the trained model (`housepred.pkl`) and the scaler (`scaler.pkl`) ready for the web application.
+```bash
+pip install "numpy<2.0" "scikit-learn>=1.0.0,<1.4"
+```
+
+### Step 3: Generate Model Files (Optional)
+
+If the model files (`housepred.pkl` and `scaler.pkl`) are not present, execute the Jupyter notebook (`Boston House Price Prediction.ipynb`) to train the model and generate the necessary `.pkl` files required for deployment. Once the notebook runs successfully, you'll have both the trained model and scaler ready for the web application.
+
+### Step 4: Run the Application
+
+Start the Flask development server:
+
+```bash
+python app.py
+```
+
+The application will be available at `http://localhost:5000` or `http://127.0.0.1:5000`
+
+### Step 5: Use the Web Interface
+
+1. Open your browser and navigate to `http://localhost:5000`
+2. Optionally click one of the sample data buttons to quickly fill the form
+3. Enter property details in the form fields (all fields include helpful placeholders)
+4. Click "🔮 Predict House Price" to get your prediction
+5. View the formatted price prediction displayed below the form
 
 ## Dataset Information
 
@@ -77,14 +127,97 @@ The predictive model is constructed using the CatBoostRegressor framework. Model
 
 **Primary Algorithm**: CatBoost Regression
 
-## Web Application Deployment
+## Web Application Features
 
-The project features a Flask web service that enables interactive price prediction. Upon server initialization, the application deserializes the trained model from `housepred.pkl` and the preprocessing scaler from `scaler.pkl`. Users can submit property feature values via two interfaces:
+The project features a modern Flask web service with an intuitive interface for price prediction. Upon server initialization, the application deserializes the trained model from `housepred.pkl` and the preprocessing scaler from `scaler.pkl`.
 
-- **Web Form Interface**: HTML form for direct user interaction
-- **REST API Endpoint**: JSON-based API (`/predict_api`) for programmatic access
+### Web Form Interface
 
-Both interfaces accept the 13 feature inputs, apply appropriate preprocessing, and return the estimated house price prediction.
+The main interface provides:
+- **Two-column responsive layout** - Optimized for desktop and mobile viewing
+- **Descriptive placeholders** - Each field shows its full name and description (e.g., "CRIM (Crime Rate per Capita)")
+- **Sample data buttons** - Quick-fill options for testing with realistic property values
+- **Formatted predictions** - Results displayed as "$250K ($250,000)" for clarity
+- **Error handling** - User-friendly error messages for invalid inputs
+
+### REST API Endpoint
+
+For programmatic access, use the `/predict_api` endpoint:
+
+**Request Example:**
+```bash
+curl -X POST http://localhost:5000/predict_api \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": {
+      "CRIM": 0.00632,
+      "ZN": 18.0,
+      "INDUS": 2.31,
+      "CHAS": 0,
+      "NOX": 0.538,
+      "RM": 6.575,
+      "Age": 65.2,
+      "DIS": 4.09,
+      "RAD": 1,
+      "TAX": 296.0,
+      "PTRATIO": 15.3,
+      "B": 396.9,
+      "LSTAT": 4.98
+    }
+  }'
+```
+
+**Response Example:**
+```json
+{
+  "prediction": 250.5,
+  "formatted_price": "$250.50K ($250,500)"
+}
+```
+
+## Troubleshooting
+
+### NumPy Version Compatibility
+
+If you encounter errors like `numpy.dtype size changed`, this indicates a version mismatch. The pickle files were created with NumPy 1.x:
+
+**Solution:**
+```bash
+pip install "numpy<2.0" "scikit-learn>=1.0.0,<1.4"
+```
+
+### Scikit-learn Compatibility
+
+If you see `AttributeError: Can't get attribute '_passthrough_scorer'`, downgrade scikit-learn:
+
+**Solution:**
+```bash
+pip install scikit-learn==1.0.2
+```
+
+### Model Files Not Found
+
+If `housepred.pkl` or `scaler.pkl` are missing:
+
+**Solution:** Run the Jupyter notebook (`Boston House Price Prediction.ipynb`) to generate the model files.
+
+### Port Already in Use
+
+If port 5000 is already in use:
+
+**Solution:** Modify `app.py` to use a different port:
+```python
+app.run(debug=True, port=5001)
+```
+
+### Module Not Found
+
+If you get import errors:
+
+**Solution:** Ensure all dependencies are installed:
+```bash
+pip install -r requirements.txt
+```
 
 ## How to Contribute
 
@@ -104,6 +237,58 @@ For enhancement ideas, feel free to open an issue tagged with "enhancement". If 
 
 This project is licensed under the GNU General Public License v3.0. For complete license details, refer to the `LICENSE` file.
 
+## Project Structure
+
+```
+Boston_house_pred/
+├── app.py                              # Flask web application
+├── requirements.txt                    # Python dependencies
+├── housepred.pkl                       # Trained CatBoost model
+├── scaler.pkl                          # Data preprocessing scaler
+├── Boston House Price Prediction.ipynb # Model training notebook
+├── templates/
+│   └── home.html                      # Web interface template
+├── Output/
+│   └── image.png                      # Project screenshot
+├── Procfile                           # Heroku deployment config
+├── netlify.toml                       # Netlify deployment config
+├── .gitignore                         # Git ignore rules
+└── README.md                          # Project documentation
+```
+
+## Screenshots
+
+![Web Application Interface](Output/image.png)
+
+The web interface features a modern gradient design with a clean two-column form layout, making it easy to input property details and get instant price predictions.
+
+## Deployment
+
+### Heroku Deployment
+
+The project includes a `Procfile` for easy Heroku deployment:
+
+```bash
+gunicorn app:app
+```
+
+### Netlify Deployment
+
+Configuration for Netlify is available in `netlify.toml`.
+
+**Note:** For production deployment, make sure to set `debug=False` in `app.py` for security.
+
 ## Credits & References
 
 The foundation of this work stems from the Boston House Price Prediction challenges and datasets available on Kaggle. We extend gratitude to the developers and maintainers of the open-source Python libraries that made this project possible.
+
+## Recent Updates
+
+- ✅ Modernized UI with gradient design and responsive layout
+- ✅ Added sample data buttons for quick testing
+- ✅ Implemented two-column form layout for better UX
+- ✅ Enhanced placeholders with full feature descriptions
+- ✅ Improved price formatting for readability
+- ✅ Added comprehensive error handling
+- ✅ Fixed NumPy/scikit-learn version compatibility issues
+- ✅ Updated documentation with troubleshooting guide
