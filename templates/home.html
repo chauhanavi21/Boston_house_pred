@@ -9,58 +9,168 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 
     <style>
-      .login {
-        width: 400px;
-        margin: 30px auto;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
         font-family: 'Open Sans Condensed', sans-serif;
       }
       
+      .login {
+        max-width: 900px;
+        width: 100%;
+        margin: 30px auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+      
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      
+      .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      
+      .form-row .form-group {
+        flex: 1;
+      }
+      
       h1 {
-        font-size: 2em;
+        font-size: 2.5em;
         text-align: center;
         font-family: 'Pacifico', cursive;
-        color: #3b3e47;
-        margin-bottom: 50px;
+        color: #667eea;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .form-group {
+        margin-bottom: 0;
+        width: 100%;
+      }
+      
+      label {
+        display: block;
+        font-size: 0.9em;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 5px;
+        font-family: 'Arimo', sans-serif;
       }
       
       input[type="text"] {
         width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: none;
-        border-bottom: 2px solid #3b3e47;
-        font-size: 1.2em;
+        padding: 12px 15px;
+        margin-bottom: 5px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1em;
         font-family: 'Arimo', sans-serif;
+        transition: all 0.3s ease;
+        background-color: #f9f9f9;
+      }
+      
+      input[type="text"]:focus {
+        outline: none;
+        border-color: #667eea;
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+      
+      input[type="text"]::placeholder {
+        color: #999;
+        font-size: 0.85em;
+      }
+      
+      .help-text {
+        font-size: 0.75em;
+        color: #888;
+        margin-top: 2px;
+        font-style: italic;
       }
       
       button[type="submit"] {
         display: block;
         width: 100%;
-        padding: 10px;
-        background-color: #3b3e47;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: #fff;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         font-size: 1.2em;
         font-family: 'Arimo', sans-serif;
+        font-weight: 600;
         cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
       }
-      .result-text {
-    font-size: 1.5em;
-    font-weight: bold;
-    text-align: center;
-    color: #3b3e47;
-    margin-top: 50px;
-  }
-
-      body {
-  background-color: rgba(255, 255, 255, 0.9);
-}
-
-
       
       button[type="submit"]:hover {
-        background-color: #2b2e37;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+      
+      button[type="submit"]:active {
+        transform: translateY(0);
+      }
+      
+      .result-text {
+        font-size: 1.8em;
+        font-weight: bold;
+        text-align: center;
+        color: #667eea;
+        margin-top: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+      }
+      
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 1em;
+      }
+      
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .login {
+          padding: 20px;
+          max-width: 100%;
+        }
+        
+        h1 {
+          font-size: 2em;
+        }
+      }
+      
+      @media (max-width: 600px) {
+        .login {
+          padding: 20px;
+        }
+        
+        h1 {
+          font-size: 2em;
+        }
       }
     </style>
   </head>
@@ -68,26 +178,59 @@
 <body>
  <div class="login">
 	<h1>Boston House Price Prediction</h1>
+    <p class="subtitle">Enter property details below to get an AI-powered price estimate</p>
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button type="button" onclick="loadSample('expensive')" style="padding: 8px 15px; margin: 5px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em;">💰 Load Expensive House</button>
+        <button type="button" onclick="loadSample('average')" style="padding: 8px 15px; margin: 5px; background: #764ba2; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em;">🏠 Load Average House</button>
+        <button type="button" onclick="loadSample('budget')" style="padding: 8px 15px; margin: 5px; background: #f093fb; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em;">💵 Load Budget House</button>
+    </div>
 
      <!-- Main Input For Receiving Query to our ML -->
-    <form action="{{ url_for('predict')}}"method="post">
-      <input type="text" name="CRIM" placeholder="CRIM" required="required" /><br>
-    	<input type="text" name="ZN" placeholder="ZN" required="required" /><br>
-        <input type="text" name="INDUS" placeholder="INDUS" required="required" /><br>
-        <input type="text" name="CHAS" placeholder="CHAS" required="required" /><br>
-        <input type="text" name="NOX" placeholder="NOX" required="required" /><br>
-        <input type="text" name="RM" placeholder="RM" required="required" /><br>
-        <input type="text" name="Age" placeholder="Age" required="required" /><br>
-        <input type="text" name="DIS" placeholder="DIS" required="required" /><br>
-        <input type="text" name="RAD" placeholder="RAD" required="required" /><br>
-        <input type="text" name="TAX" placeholder="TAX" required="required" /><br>
-        <input type="text" name="PTRATIO" placeholder="PTRATIO" required="required" /><br>
-        <input type="text" name="B" placeholder="B" required="required" /><br>
-        <input type="text" name="LSTAT" placeholder="LSTAT" required="required" /><br>
+    <form id="predictionForm" action="{{ url_for('predict')}}"method="post">
+      <div class="form-grid">
+        <div class="form-group">
+          <input type="text" id="CRIM" name="CRIM" placeholder="CRIM (Crime Rate per Capita)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="ZN" name="ZN" placeholder="ZN (Residential Land Zoned for Large Lots)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="INDUS" name="INDUS" placeholder="INDUS (Non-Retail Business Acres)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="CHAS" name="CHAS" placeholder="CHAS (Charles River: 0 or 1)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="NOX" name="NOX" placeholder="NOX (Nitric Oxide Concentration)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="RM" name="RM" placeholder="RM (Average Number of Rooms)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="Age" name="Age" placeholder="AGE (Age of Property in Years)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="DIS" name="DIS" placeholder="DIS (Distance to Employment Centers)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="RAD" name="RAD" placeholder="RAD (Highway Accessibility Index)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="TAX" name="TAX" placeholder="TAX (Property Tax Rate per $10K)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="PTRATIO" name="PTRATIO" placeholder="PTRATIO (Pupil-Teacher Ratio)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="B" name="B" placeholder="B (Proportion of Black Residents)" required="required" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="LSTAT" name="LSTAT" placeholder="LSTAT (Lower Status Population %)" required="required" />
+        </div>
+      </div>
 
-       
-
-        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+        <button type="submit" class="btn btn-primary btn-block btn-large">🔮 Predict House Price</button>
     </form>
 
    <br>
@@ -96,6 +239,63 @@
    
  </div>
  <p class="result-text">{{prediction_text}}</p>
+
+<script>
+function loadSample(type) {
+    const samples = {
+        expensive: {
+            CRIM: "0.00632",
+            ZN: "18.0",
+            INDUS: "2.31",
+            CHAS: "0",
+            NOX: "0.538",
+            RM: "6.575",
+            Age: "65.2",
+            DIS: "4.09",
+            RAD: "1",
+            TAX: "296.0",
+            PTRATIO: "15.3",
+            B: "396.9",
+            LSTAT: "4.98"
+        },
+        average: {
+            CRIM: "0.06905",
+            ZN: "0.0",
+            INDUS: "2.18",
+            CHAS: "0",
+            NOX: "0.458",
+            RM: "6.998",
+            Age: "45.8",
+            DIS: "6.0622",
+            RAD: "3",
+            TAX: "222.0",
+            PTRATIO: "18.7",
+            B: "394.63",
+            LSTAT: "2.94"
+        },
+        budget: {
+            CRIM: "4.64689",
+            ZN: "0.0",
+            INDUS: "18.10",
+            CHAS: "0",
+            NOX: "0.584",
+            RM: "6.076",
+            Age: "93.3",
+            DIS: "1.9444",
+            RAD: "24",
+            TAX: "666.0",
+            PTRATIO: "20.2",
+            B: "370.73",
+            LSTAT: "18.13"
+        }
+    };
+    
+    const sample = samples[type];
+    for (const [key, value] of Object.entries(sample)) {
+        document.getElementById(key).value = value;
+    }
+}
+</script>
 
 </body>
 </html>
